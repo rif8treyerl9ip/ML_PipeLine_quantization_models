@@ -1,0 +1,12 @@
+*
+!.gitignore
+
+
+# notebooks/
+# notebooks/data/
+
+# logs/
+# models/
+
+# TASK.md
+
