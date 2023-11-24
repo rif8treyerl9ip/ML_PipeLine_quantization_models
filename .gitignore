@@ -1,12 +1,14 @@
-*
+# *
 !.gitignore
 
+data/
+db/
 
-# notebooks/
-# notebooks/data/
+!notebooks/
+/notebooks/data/
 
-# logs/
-# models/
+logs/
+models/
 
-# TASK.md
-
+TASK.md
+tmp.ipynb
