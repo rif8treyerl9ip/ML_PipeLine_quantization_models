@@ -1,14 +1,10 @@
-# *
-!.gitignore
 
 data/
-db/
+db/README.md
 
-!notebooks/
 /notebooks/data/
 
-logs/
-models/
+# models/
+models/*/*
 
-TASK.md
 tmp.ipynb
