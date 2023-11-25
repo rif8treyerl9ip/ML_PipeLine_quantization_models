@@ -1,31 +1,60 @@
+# ML_PipeLine_quantization_models
 
-DB設計による効率的なコラボレーション
+※このリポジトリでは、ONNX GPUとPyTorch GPUの使用を前提としています。対応するGPUドライバとCUDA Toolkit、CuDNNをインストールする必要があります。お使いの環境に合わせて適切なバージョンのドライバ、CUDA Toolkit、CuDNN、ONNX、ONNX-gpuをインストールしてください。[ONNX-gpuが動作する環境](https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html#requirements)から逆算してバージョン設定をすることを推奨します。
 
 
+## 概要
+このツールは、機械学習モデルの学習プロセスと実験結果を効率的に管理することを目的として設計されています。データベースを使用して実験結果を整理し、結果の比較や分析を容易に行えるようにします。ユーザーは、複数のモデルやパラメータの変更に伴う性能の変化を一目で把握できます。
 
 
-# モデルフォルダ構造
+## 特徴
+- **ローカル環境での利用**: ユーザーは自分のPC上でツールを使用でき、インターネット接続がない環境でも実験管理が可能です。
+- **多様なモデルサポート**: 異なるタイプの機械学習モデルやフレームワークに対応し、幅広い実験ニーズに応えます。
+- **インタラクティブな結果表示**: 実験の結果はグラフや表など、視覚的にわかりやすい形で表示されます。これにより、データの傾向や特徴を素早く把握できます。
+- **自動化された実験トラッキング**: 各実験のパラメータ、成果、ログなどが自動的に記録されるため、手動での記録の手間が省けます。
+- **カスタマイズ可能なレポート生成**: ユーザーは自分のニーズに合わせて、カスタマイズされたレポートを作成できます。これにより、プレゼンテーションやドキュメント作成が容易になります。
 
-以下に、量子化関連のデータベース設計に使用されるモデルのフォルダ構造を示します：
+## セットアップ
 
+- 使用するOSに合わせてpostgresqlをインストール
+- pgadminを使用して機械学習モデルの管理をするためのデータベース(例：ML_models)を作成
+- requirements.txtを使用してパッケージをインストール
+
+```bash
+pip install -r requirements.txt
 ```
-C:.
-├─preprocessed_models
-├─quantized_models
-└─raw_models
+- PostgreSQLサーバを起動
+```bash
+# 例
+cd C:/Program Files/PostgreSQL/12
+pg_ctl start -D data
 ```
 
-- `preprocessed_models`: 前処理済みのモデルが格納されるフォルダ
-- `quantized_models`: 量子化されたモデルが格納されるフォルダ
-- `raw_models`: 元の（未処理の）モデルが格納されるフォルダ
-```
+## データベース接続とテーブル作成の手順
 
-この例では、フォルダ名の綴りを英語に修正し（`preprocessd_models` を `preprocessed_models` に、`quautized_models` を `quantized_models` に）、Markdownのコードブロック（`` ``` ``）を使用してフォルダ構造を視覚的に表現しています。また、各フォルダの説明も加えています。これにより、`README.md` ファイルの読者がフォルダ構造とその内容を容易に理解できるよう
+1. `./db/src/configurations.py` にある `DBConfigurations` クラスを編集して、データベースへの接続設定を行います。
+2. `./db/app.py` を実行して、設定が正しく機能するかテストします。このスクリプトの実行により、必要なテーブルがデータベース内に自動的に作成されます。
 
+## 使い方
 
+### GPU対応環境での実験の実行
 
+- このツールはONNX GPUとPyTorch GPUを使用することを想定しています。GPU対応環境で実験を行う場合は、適切なGPUドライバとCUDA Toolkitがインストールされていることを確認してください。
 
+### データベース接続の設定
 
-webサーバ立ち上げの仮想環境とは分ける
-必要な処理
->poetry add uvicorn
+- データベースに接続するために必要な情報（`POSTGRES_USER`、`POSTGRES_PASSWORD`、`POSTGRES_PORT`、`POSTGRES_DB`、`POSTGRES_SERVER`）を含む設定ファイル（configファイル）を用意します。
+- 設定ファイルが正しく機能するかをテストするために、notebookから設定ファイルを読み込んで接続テストを行います。
+
+### 実験の実行
+
+- `./notebooks` フォルダにあるノートブックを使って、実験を行います。
+- ノートブックでは、ショートコミットハッシュやモデル名などのパラメータを手動で設定します。
+- 設定したパラメータを用いて、モデルの学習、データベースへのモデルの追加、学習結果の可視化などを行うことができます。
+
+    
+## ライセンス
+このプロジェクトは[MITライセンス](LICENSE)の下で公開されています。
+
+### 参考にしたリポジトリ
+- [DBの設計：ml-system-in-actions](https://github.com/shibuiwilliam/ml-system-in-actions/tree/main/chapter2_training)
