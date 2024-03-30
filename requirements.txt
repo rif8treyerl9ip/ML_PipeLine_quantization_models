@@ -12,7 +12,7 @@ debugpy==1.8.0
 decorator==5.1.1
 exceptiongroup==1.2.0
 executing==2.0.1
-fastapi==0.104.1
+fastapi==0.109.1
 filelock==3.9.0
 flatbuffers==23.5.26
 fsspec==2023.4.0
