@@ -1,60 +1,51 @@
 # ML_PipeLine_quantization_models
 
-※このリポジトリでは、ONNX GPUとPyTorch GPUの使用を前提としています。対応するGPUドライバとCUDA Toolkit、CuDNNをインストールする必要があります。お使いの環境に合わせて適切なバージョンのドライバ、CUDA Toolkit、CuDNN、ONNX、ONNX-gpuをインストールしてください。[ONNX-gpuが動作する環境](https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html#requirements)から逆算してバージョン設定をすることを推奨します。
+**Note:** This repository assumes the use of ONNX GPU and PyTorch GPU. You need to install the corresponding GPU drivers, CUDA Toolkit, and CuDNN. Install the appropriate versions of drivers, CUDA Toolkit, CuDNN, ONNX, and ONNX-gpu according to your environment. It is recommended to set the versions based on the [environment requirements for ONNX-gpu](https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html#requirements).
 
+## Overview
 
-## 概要
-このツールは、機械学習モデルの学習プロセスと実験結果を効率的に管理することを目的として設計されています。データベースを使用して実験結果を整理し、結果の比較や分析を容易に行えるようにします。ユーザーは、複数のモデルやパラメータの変更に伴う性能の変化を一目で把握できます。
+This tool is designed to efficiently manage the training process and experimental results of machine learning models. By using a database to organize experimental results, it facilitates result comparison and analysis. Users can easily observe performance changes associated with multiple models or parameter adjustments.
 
+## Features
 
-## 特徴
-- **ローカル環境での利用**: ユーザーは自分のPC上でツールを使用でき、インターネット接続がない環境でも実験管理が可能です。
-- **多様なモデルサポート**: 異なるタイプの機械学習モデルやフレームワークに対応し、幅広い実験ニーズに応えます。
-- **インタラクティブな結果表示**: 実験の結果はグラフや表など、視覚的にわかりやすい形で表示されます。これにより、データの傾向や特徴を素早く把握できます。
-- **自動化された実験トラッキング**: 各実験のパラメータ、成果、ログなどが自動的に記録されるため、手動での記録の手間が省けます。
-- **カスタマイズ可能なレポート生成**: ユーザーは自分のニーズに合わせて、カスタマイズされたレポートを作成できます。これにより、プレゼンテーションやドキュメント作成が容易になります。
+- **Local Environment Usage**: Users can use the tool on their own PC, enabling experiment management even in environments without an internet connection.
+- **Support for Diverse Models**: It supports different types of machine learning models and frameworks, catering to a wide range of experimental needs.
+- **Interactive Result Display**: Experimental results are displayed in a visually comprehensible form, such as graphs or tables, allowing for quick understanding of data trends and characteristics.
+- **Automated Experiment Tracking**: Parameters, achievements, logs, and other information for each experiment are automatically recorded, eliminating the need for manual record-keeping.
+- **Customizable Report Generation**: Users can create customized reports tailored to their needs, facilitating presentations and documentation.
 
-## セットアップ
+## Setup
 
-- 使用するOSに合わせてpostgresqlをインストール
-- pgadminを使用して機械学習モデルの管理をするためのデータベース(例：ML_models)を作成
-- requirements.txtを使用してパッケージをインストール
+- Install postgresql according to your operating system.
+- Using pgadmin, create a database (e.g., ML_models) for managing machine learning models.
+- Install packages using requirements.txt.
 
 ```bash
 pip install -r requirements.txt
 ```
-- PostgreSQLサーバを起動
+- Start the PostgreSQL server
+
 ```bash
-# 例
+# For example
 cd C:/Program Files/PostgreSQL/12
 pg_ctl start -D data
 ```
 
-## データベース接続とテーブル作成の手順
+## Steps for Database Connection and Table Creation
 
-1. `./db/src/configurations.py` にある `DBConfigurations` クラスを編集して、データベースへの接続設定を行います。
-2. `./db/app.py` を実行して、設定が正しく機能するかテストします。このスクリプトの実行により、必要なテーブルがデータベース内に自動的に作成されます。
+1. Edit the `DBConfigurations` class in `./db/src/configurations.py` to configure the database connection settings.
+2. Run `./db/app.py` to test if the configuration is functioning correctly. This script will automatically create the necessary tables in the database.
 
-## 使い方
+## Usage
 
-### GPU対応環境での実験の実行
+### Running Experiments in a GPU-enabled Environment
+- This tool assumes the use of ONNX GPU and PyTorch GPU. When running experiments in a GPU-enabled environment, ensure that the appropriate GPU drivers and CUDA Toolkit are installed.
 
-- このツールはONNX GPUとPyTorch GPUを使用することを想定しています。GPU対応環境で実験を行う場合は、適切なGPUドライバとCUDA Toolkitがインストールされていることを確認してください。
+### Setting up Database Connection
+- Prepare a configuration file (config file) containing the necessary information (`POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_PORT`, `POSTGRES_DB`, `POSTGRES_SERVER`) to connect to the database.
+- Test the configuration file by loading it from a notebook and performing a connection test.
 
-### データベース接続の設定
-
-- データベースに接続するために必要な情報（`POSTGRES_USER`、`POSTGRES_PASSWORD`、`POSTGRES_PORT`、`POSTGRES_DB`、`POSTGRES_SERVER`）を含む設定ファイル（configファイル）を用意します。
-- 設定ファイルが正しく機能するかをテストするために、notebookから設定ファイルを読み込んで接続テストを行います。
-
-### 実験の実行
-
-- `./notebooks` フォルダにあるノートブックを使って、実験を行います。
-- ノートブックでは、ショートコミットハッシュやモデル名などのパラメータを手動で設定します。
-- 設定したパラメータを用いて、モデルの学習、データベースへのモデルの追加、学習結果の可視化などを行うことができます。
-
-    
-## ライセンス
-このプロジェクトは[MITライセンス](LICENSE)の下で公開されています。
-
-### 参考にしたリポジトリ
-- [DBの設計：ml-system-in-actions](https://github.com/shibuiwilliam/ml-system-in-actions/tree/main/chapter2_training)
+### Running Experiments
+- Use the notebooks in the `./notebooks` folder to conduct experiments.
+- In the notebooks, you will manually set parameters such as the short commit hash and model name.
+- With the set parameters, you can train models, add models to the database, and visualize training results.
